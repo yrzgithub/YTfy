@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.YTfy" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:windowFullscreen">false</item>
+
+    </style>
+
+    <style name="Theme.YTfy" parent="Base.Theme.YTfy" />
+</resources>
