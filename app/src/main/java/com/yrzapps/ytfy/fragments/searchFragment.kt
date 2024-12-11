@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.yrzapps.ytfy.R
+import com.yrzapps.ytfy.core.YTInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -31,7 +32,13 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        runBlocking {
 
+            withContext(Dispatchers.IO) {
+                YTInfo("elangathu veesuthey")
+            }
+
+        }
 
         super.onViewCreated(view, savedInstanceState)
     }
