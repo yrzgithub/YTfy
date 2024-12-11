@@ -1,4 +1,4 @@
-package com.yrzapps.ytfy
+package com.yrzapps.ytfy.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -9,6 +9,8 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.yrzapps.ytfy.R
+import com.yrzapps.ytfy.adapters.FragmentAdapter
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

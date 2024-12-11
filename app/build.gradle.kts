@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.chaquo.python")
 }
 
 android {
@@ -15,6 +16,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters += listOf("arm64-v8a")
+        }
     }
 
     buildTypes {
@@ -32,6 +37,20 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+chaquopy {
+    defaultConfig {
+        version = "3.9"
+
+        buildPython( "D:\\Apps\\python39\\python.exe")
+
+        pip {
+            install("pytubefix")
+            install("youtube-search")
+            install("requests")
+        }
     }
 }
 

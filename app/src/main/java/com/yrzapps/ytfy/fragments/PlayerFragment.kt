@@ -1,10 +1,11 @@
-package com.yrzapps.ytfy
+package com.yrzapps.ytfy.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.yrzapps.ytfy.R
 
 
 class PlayerFragment : Fragment() {
