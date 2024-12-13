@@ -6,9 +6,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.SearchFragment">
 
-    <AutoCompleteTextView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/search"
         android:layout_width="match_parent"
+        android:maxLines="1"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"

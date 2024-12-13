@@ -1,9 +1,10 @@
 package com.yrzapps.ytfy.adapters
 
 import android.app.Activity
+import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,44 +13,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.yrzapps.ytfy.R
 
 
-/* class SearchResultAdapter(val context : Activity, val info : List<Map<String,String>>) : BaseAdapter() {
-
-    override fun getCount(): Int {
-        return info.size
-    }
-
-    override fun getItem(p0: Int): Any {
-        return info[p0]
-    }
-
-    override fun getItemId(p0: Int): Long {
-        return 0L
-    }
-
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        val resultView = p1?:context.layoutInflater.inflate(R.layout.custom_search_result,null)
-
-        val ytInfo : Map<String,String> = info[p0]
-        println(ytInfo)
-
-        val thumbnail = resultView.findViewById<ImageView>(R.id.thumbnail)
-        val channelThumbnail = resultView.findViewById<ShapeableImageView>(R.id.channelThumbnail)
-
-        val title = resultView.findViewById<TextView>(R.id.videoTitle)
-        val metaData = resultView.findViewById<TextView>(R.id.videoInfo)
-
-        title.text = ytInfo["title"]
-        metaData.text = "${ytInfo["channel"]} . ${ytInfo["views"]} . ${ytInfo["publish_time"]}"
-
-        Glide.with(thumbnail).load(ytInfo["thumbnail"]).into(thumbnail)
-        Glide.with(channelThumbnail).load(ytInfo["channel_thumbnail"]).into(channelThumbnail)
-
-        return resultView
-    }
-} */
-
-
-class SearchAdapter(val context : Activity,val info : List<Map<String,String>>) : RecyclerView.Adapter<SearchResultViewHolder>()
+class SearchAdapter(val context : Activity,val info : MutableList<Map<String,String>>,val onClick : (Int,Map<String,String>) -> Unit) : RecyclerView.Adapter<SearchResultViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         return SearchResultViewHolder(context.layoutInflater.inflate(R.layout.custom_search_result,null))
@@ -61,6 +25,10 @@ class SearchAdapter(val context : Activity,val info : List<Map<String,String>>) 
 
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
 
+        holder.resultView.setOnClickListener {
+            onClick(position,info[position])
+        }
+
         val ytInfo : Map<String,String> = info[position]
 
         holder.title.text = ytInfo["title"]
@@ -68,10 +36,6 @@ class SearchAdapter(val context : Activity,val info : List<Map<String,String>>) 
 
         Glide.with(holder.thumbnail).load(ytInfo["thumbnail"]).into(holder.thumbnail)
         Glide.with(holder.channelThumbnail).load(ytInfo["channel_thumbnail"]).into(holder.channelThumbnail)
-    }
-
-    override fun registerAdapterDataObserver(observer: RecyclerView.AdapterDataObserver) {
-        super.registerAdapterDataObserver(observer)
     }
 
 }
@@ -84,4 +48,32 @@ data class SearchResultViewHolder(val resultView : View) : RecyclerView.ViewHold
 
     val title = resultView.findViewById<TextView>(R.id.videoTitle)
     val metaData = resultView.findViewById<TextView>(R.id.videoInfo)
+}
+
+
+class SuggestionsAdapter(val context : Context,val suggestions : MutableList<String>,val onClick : (Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    lateinit var suggest : TextView
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        suggest = TextView(context)
+        suggest.setTextSize(TypedValue.COMPLEX_UNIT_SP,18F)
+        suggest.setPadding(15,20,0,20)
+
+        return object : RecyclerView.ViewHolder(suggest) {
+
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return suggestions.size
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        suggest.setOnClickListener {
+            onClick(position)
+        }
+        suggest.text = suggestions[position]
+    }
+
 }

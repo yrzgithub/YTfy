@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="Now Playing"
-            android:id="@+id/nowplaing"
             android:layout_toEndOf="@+id/back_btn"
             android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
@@ -52,12 +51,12 @@
         android:layout_marginTop="22dp">
 
         <ImageView
+            android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_launcher_foreground"
             android:layout_centerHorizontal="true"
-            android:scaleType="centerCrop"
-            android:id="@+id/cover_art"/>
+            android:scaleType="centerCrop" />
 
     </androidx.cardview.widget.CardView>
 
@@ -66,7 +65,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="Song Title"
-        android:id="@+id/song_artist"
+        android:id="@+id/title"
         android:layout_below="@+id/card"
         android:gravity="start"
         android:textSize="18sp"
@@ -83,8 +82,8 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="Channel Name"
-        android:id="@+id/song_album"
-        android:layout_below="@+id/song_artist"
+        android:id="@+id/channel"
+        android:layout_below="@+id/title"
         android:gravity="start"
         android:textSize="13sp"
         android:singleLine="true"
@@ -96,15 +95,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_below="@+id/song_album"
+        android:layout_below="@+id/channel"
         android:layout_marginTop="10dp"
         android:id="@+id/seek_bar_layout">
 
         <TextView
+            android:id="@+id/currentPosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1:28"
-            android:id="@+id/durationPlayed"
             android:layout_marginTop="40dp"
             android:layout_marginStart="20dp"
             android:layout_alignBottom="@id/seekBar"
@@ -112,11 +111,11 @@
             android:layout_alignParentStart="true"/>
 
         <TextView
+            android:id="@+id/endPosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4:28"
             android:layout_alignBottom="@id/seekBar"
-            android:id="@+id/durationTotal"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="20dp"
             android:textSize="14sp"
@@ -129,12 +128,12 @@
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_alignParentBottom="true"/>
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/relative_layout_for_bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
@@ -143,16 +142,15 @@
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:id="@+id/id_shuffle"
             app:srcCompat="@drawable/shuffle"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
             android:layout_marginStart="32dp"/>
 
         <ImageView
+            android:id="@+id/backward"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:id="@+id/id_prev"
             app:srcCompat="@drawable/skip_previous"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/play_pause"
@@ -173,9 +171,9 @@
             />
 
         <ImageView
+            android:id="@+id/forward"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:id="@+id/id_next"
             app:srcCompat="@drawable/skip_next"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/play_pause"
@@ -184,7 +182,6 @@
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:id="@+id/id_repeat"
             app:srcCompat="@drawable/repeat"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"

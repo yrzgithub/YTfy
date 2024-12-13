@@ -1,5 +1,4 @@
-from pytubefix import YouTube
-from youtube_search import YoutubeSearch
+from pytubefix import YouTube,Search
 import requests
 import urllib.parse
 import json
@@ -11,15 +10,19 @@ BASE_URL = "https://youtube.com"
 
 def getStream(url:str)->[str]:
     yt = YouTube(url)
-    return yt.streams.filter(only_audio=True).get_highest_resolution(progressive=False).url
+    return yt.streams.filter(only_audio=True).first().url
 
 
 def getSuggestions(query:str)->[str]:
     search = Search(query)
-    return search.completion_suggestions
+
+    try:
+        return search.completion_suggestions
+    except:
+        return []
 
 
-def search(query,max_results=10,max_retries=10):
+def search(query,max_results=None,max_retries=10):
         encoded_search = urllib.parse.quote_plus(query)
         url = f"{BASE_URL}/results?search_query={encoded_search}"
         response = requests.get(url).text
