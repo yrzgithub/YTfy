@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     id("com.chaquo.python")
+    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {

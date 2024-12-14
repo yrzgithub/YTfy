@@ -39,7 +39,15 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(tabLayout,pager,true) {
 
             tab,position ->
-            tab.setIcon(R.drawable.skip_next)
+            tab.setIcon(
+                when(position)
+                {
+                    0 -> R.drawable.search
+                    1 -> R.drawable.player
+                    2 -> R.drawable.playlist
+                    else -> 0
+                }
+            )
 
         }.attach()
     }

@@ -9,7 +9,7 @@ import com.yrzapps.ytfy.fragments.SearchFragment
 
 class FragmentAdapter(manager : FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(manager,lifecycle) {
 
-    val fragments : List<Fragment> = listOf(PlayerFragment(), SearchFragment())
+    val fragments : List<Fragment> = listOf(PlayerFragment(), SearchFragment(),PlayerFragment())
 
     override fun getItemCount(): Int {
         return fragments.size

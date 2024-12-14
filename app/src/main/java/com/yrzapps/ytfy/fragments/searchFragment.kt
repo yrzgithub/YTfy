@@ -77,6 +77,9 @@ class SearchFragment : Fragment(),OnClickListener,OnQueryTextListener {
     override fun onQueryTextSubmit(query: String?): Boolean {
 
         recycleView.adapter = searchAdapter
+        queryView.isIconified = true
+        queryView.clearFocus()
+        queryView.clearAnimation()
 
         CoroutineScope(Dispatchers.IO).launch {
             val info : List<Map<String,String>> = main.callAttr("search",query).asList().map {
