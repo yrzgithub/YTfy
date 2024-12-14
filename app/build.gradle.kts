@@ -44,7 +44,7 @@ chaquopy {
     defaultConfig {
         version = "3.9"
 
-        buildPython( "D:\\Apps\\python39\\python.exe")
+        buildPython("D:\\Apps\\python39\\python.exe")
 
         pip {
             install("pytubefix")
@@ -58,8 +58,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
-    implementation ("androidx.media3:media3-exoplayer:1.2.1")
-    implementation ("androidx.media3:media3-ui:1.2.1")
+    implementation("androidx.media3:media3-exoplayer:1.2.1")
+    implementation("androidx.media3:media3-ui:1.2.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

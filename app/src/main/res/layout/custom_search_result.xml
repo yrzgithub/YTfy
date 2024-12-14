@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/thumbnail"
@@ -22,34 +21,34 @@
         app:layout_constraintTop_toBottomOf="@id/thumbnail">
 
         <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/channelThumbnail"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
-            android:id="@+id/channelThumbnail"
             android:src="@drawable/play_arrow"
-            app:shapeAppearance="@style/rounded"
-            android:layout_alignParentStart="true" />
+            app:shapeAppearance="@style/rounded" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/videoTitle"
-            android:maxLines="2"
-            android:layout_alignParentEnd="true"
-            android:text="Video Title"
-            android:textSize="18sp"
-            android:layout_toEndOf="@id/channelThumbnail" />
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/channelThumbnail"
+            android:maxLines="2"
+            android:text="Video Title"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/videoInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/videoTitle"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/channelThumbnail"
             android:maxLines="2"
             android:text="Vidoo Info"
-            android:textSize="15sp"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/videoTitle"
-            android:layout_toEndOf="@id/channelThumbnail" />
+            android:textSize="15sp" />
 
     </RelativeLayout>
 

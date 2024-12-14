@@ -1,6 +1,5 @@
 package com.yrzapps.ytfy.fragments
 
-import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,10 +14,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
 import androidx.media3.common.Player.Listener
+import androidx.media3.exoplayer.ExoPlayer
 import com.bumptech.glide.Glide
 import com.chaquo.python.PyObject
 import com.chaquo.python.Python
@@ -27,28 +25,23 @@ import com.yrzapps.ytfy.core.YTInfoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
 
-class PlayerFragment : Fragment(), OnClickListener,OnSeekBarChangeListener,Listener {
+class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Listener {
 
-    lateinit var player : ExoPlayer
-    lateinit var main : PyObject
-    lateinit var currentPosition : TextView
-    lateinit var seek : SeekBar
-    lateinit var play : ImageButton
-    lateinit var endPosition : TextView
+    lateinit var player: ExoPlayer
+    lateinit var main: PyObject
+    lateinit var currentPosition: TextView
+    lateinit var seek: SeekBar
+    lateinit var play: ImageButton
+    lateinit var endPosition: TextView
 
-    var runnable : Runnable ?= null
+    var runnable: Runnable? = null
     val handler = Handler(Looper.getMainLooper())
 
     companion object {
-        val seekDuration : Int = 5000
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        val seekDuration: Int = 5000
     }
 
     override fun onCreateView(
@@ -76,8 +69,7 @@ class PlayerFragment : Fragment(), OnClickListener,OnSeekBarChangeListener,Liste
         main = Python.getInstance().getModule("main")
 
         val infoModel = ViewModelProvider(requireActivity())[YTInfoViewModel::class.java]
-        infoModel.info.observe(viewLifecycleOwner) {
-            info ->
+        infoModel.info.observe(viewLifecycleOwner) { info ->
             Glide.with(thumbnail).load(info["thumbnail"]).into(thumbnail)
 
             title.text = info["title"]
@@ -86,7 +78,7 @@ class PlayerFragment : Fragment(), OnClickListener,OnSeekBarChangeListener,Liste
 
             CoroutineScope(Dispatchers.IO).launch {
                 val url = "https://www.youtube.com/watch?v=${info["id"]}"
-                val streamUrl = main.callAttr("getStream",url).toString()
+                val streamUrl = main.callAttr("getStream", url).toString()
 
                 println(streamUrl)
 
@@ -107,15 +99,14 @@ class PlayerFragment : Fragment(), OnClickListener,OnSeekBarChangeListener,Liste
         backward.setOnClickListener(this)
         player.addListener(this)
 
-        runnable = object : Runnable
-        {
+        runnable = object : Runnable {
             override fun run() {
                 val position = player.currentPosition
                 seek.progress = position.toInt()
 
                 val min = TimeUnit.MILLISECONDS.toMinutes(position)
                 val sec = TimeUnit.MILLISECONDS.toSeconds(position) % 60
-                val currentTime = String.format("%d:%02d",min,sec)
+                val currentTime = String.format("%d:%02d", min, sec)
 
                 currentPosition.text = currentTime
 
@@ -123,7 +114,7 @@ class PlayerFragment : Fragment(), OnClickListener,OnSeekBarChangeListener,Liste
 
                 println(currentTime)
 
-                handler.postDelayed(this,1000)
+                handler.postDelayed(this, 1000)
             }
         }
 
@@ -132,8 +123,7 @@ class PlayerFragment : Fragment(), OnClickListener,OnSeekBarChangeListener,Liste
 
     override fun onPlaybackStateChanged(playbackState: Int) {
 
-        when(playbackState)
-        {
+        when (playbackState) {
             ExoPlayer.STATE_READY -> {
                 seek.max = player.duration.toInt()
                 handler.postDelayed(runnable!!, 1000)
@@ -149,14 +139,14 @@ class PlayerFragment : Fragment(), OnClickListener,OnSeekBarChangeListener,Liste
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        play.setImageResource(if(isPlaying) R.drawable.pause else R.drawable.play_arrow)
+        play.setImageResource(if (isPlaying) R.drawable.pause else R.drawable.play_arrow)
         super.onIsPlayingChanged(isPlaying)
     }
 
     override fun onClick(p0: View?) {
-        when(p0?.id) {
+        when (p0?.id) {
 
-            R.id.play_pause -> if(player.isPlaying) player.pause() else player.play()
+            R.id.play_pause -> if (player.isPlaying) player.pause() else player.play()
             R.id.forward -> player.seekTo(player.currentPosition + seekDuration)
             R.id.backward -> player.seekTo(player.currentPosition - seekDuration)
 

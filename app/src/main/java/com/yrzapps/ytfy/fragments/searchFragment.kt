@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.chaquo.python.Python
 import com.yrzapps.ytfy.R
 import com.yrzapps.ytfy.adapters.SearchAdapter
@@ -24,20 +22,16 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
-class SearchFragment : Fragment(),OnClickListener,OnQueryTextListener {
+class SearchFragment : Fragment(), OnClickListener, OnQueryTextListener {
 
     val main = Python.getInstance().getModule("main")
 
-    lateinit var recycleView : RecyclerView
-    lateinit var queryView : SearchView
-    lateinit var suggestionsAdapter : SuggestionsAdapter
-    lateinit var searchAdapter : SearchAdapter
+    lateinit var recycleView: RecyclerView
+    lateinit var queryView: SearchView
+    lateinit var suggestionsAdapter: SuggestionsAdapter
+    lateinit var searchAdapter: SearchAdapter
 
-    var searchJob : Job? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,8 +46,7 @@ class SearchFragment : Fragment(),OnClickListener,OnQueryTextListener {
         recycleView = view.findViewById<RecyclerView>(R.id.video_data)
         recycleView.layoutManager = LinearLayoutManager(requireContext())
 
-        searchAdapter = SearchAdapter(requireActivity(), mutableListOf()) {
-            position,info ->
+        searchAdapter = SearchAdapter(requireActivity(), mutableListOf()) { position, info ->
 
             val infoModel = ViewModelProvider(requireActivity())[YTInfoViewModel::class.java]
             infoModel.info.value = info
@@ -65,10 +58,9 @@ class SearchFragment : Fragment(),OnClickListener,OnQueryTextListener {
         queryView.setOnClickListener(this)
         queryView.setOnQueryTextListener(this)
 
-        suggestionsAdapter = SuggestionsAdapter(requireContext(), mutableListOf()) {
-            position ->
-            val query : String = suggestionsAdapter.suggestions[position]
-            queryView.setQuery(query,true)
+        suggestionsAdapter = SuggestionsAdapter(requireContext(), mutableListOf()) { position ->
+            val query: String = suggestionsAdapter.suggestions[position]
+            queryView.setQuery(query, true)
         }
 
         super.onViewCreated(view, savedInstanceState)
@@ -82,9 +74,9 @@ class SearchFragment : Fragment(),OnClickListener,OnQueryTextListener {
         queryView.clearAnimation()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val info : List<Map<String,String>> = main.callAttr("search",query).asList().map {
-                it.asMap().entries.associate {
-                    (key,value) -> if(value!=null) key.toString() to value.toString() else key.toString() to ""
+            val info: List<Map<String, String>> = main.callAttr("search", query).asList().map {
+                it.asMap().entries.associate { (key, value) ->
+                    if (value != null) key.toString() to value.toString() else key.toString() to ""
                 }
             }
 
@@ -105,10 +97,10 @@ class SearchFragment : Fragment(),OnClickListener,OnQueryTextListener {
 
         searchJob = CoroutineScope(Dispatchers.IO).launch {
 
-            val suggestionsObj = main.callAttr("getSuggestions",query!!) ?: return@launch
+            val suggestionsObj = main.callAttr("getSuggestions", query!!) ?: return@launch
             val suggestions = suggestionsObj.asList().map { it.toString() }.toMutableList()
 
-            if(suggestions.isEmpty()) return@launch
+            if (suggestions.isEmpty()) return@launch
 
             searchJob = CoroutineScope(Dispatchers.Main).launch {
 
@@ -124,10 +116,8 @@ class SearchFragment : Fragment(),OnClickListener,OnQueryTextListener {
 
     override fun onClick(p0: View?) {
 
-        when(p0!!.id)
-        {
-            queryView.id ->
-            {
+        when (p0!!.id) {
+            queryView.id -> {
                 recycleView.adapter = suggestionsAdapter
                 queryView.isIconified = false
                 queryView.requestFocus()
