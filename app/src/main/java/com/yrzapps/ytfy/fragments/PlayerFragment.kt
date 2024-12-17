@@ -11,6 +11,7 @@ import android.view.View.OnClickListener
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -21,6 +22,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.Player.Listener
 import androidx.media3.exoplayer.ExoPlayer
 import com.bumptech.glide.Glide
@@ -34,7 +36,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 
-class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Listener {
+class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Listener,AnimationListener {
 
     lateinit var player: ExoPlayer
     lateinit var main: PyObject
@@ -143,8 +145,17 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
             }
         }
 
-        topToBottomAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.top_to_bottom).apply { duration = 100 }
-        bottomToTopAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.bottom_to_top).apply { duration = 100 }
+        topToBottomAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.top_to_bottom)
+            .apply {
+                duration = 100
+                setAnimationListener(this@PlayerFragment)
+            }
+
+        bottomToTopAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.bottom_to_top)
+            .apply {
+                duration = 100
+                setAnimationListener(this@PlayerFragment)
+            }
 
         super.onViewCreated(view, savedInstanceState)
     }
@@ -160,6 +171,14 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
             ExoPlayer.STATE_ENDED -> {
                 currentPosition.text = endPosition.text
                 handler.removeCallbacksAndMessages(null)
+            }
+
+            Player.STATE_BUFFERING -> {
+
+            }
+
+            Player.STATE_IDLE -> {
+
             }
         }
 
@@ -204,14 +223,26 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
     override fun onPause() {
         super.onPause()
         miniPlayer.startAnimation(bottomToTopAnimation)
-        line.visibility = VISIBLE
-        miniPlayer.visibility = VISIBLE
     }
 
     override fun onResume() {
         super.onResume()
         miniPlayer.startAnimation(topToBottomAnimation)
-        line.visibility = GONE
-        miniPlayer.visibility = GONE
+    }
+
+    override fun onAnimationStart(p0: Animation?) {
+
+        (if(p0!! == topToBottomAnimation) GONE else VISIBLE).apply {
+            line.visibility = this
+            miniPlayer.visibility = this
+        }
+    }
+
+    override fun onAnimationEnd(p0: Animation?) {
+
+    }
+
+    override fun onAnimationRepeat(p0: Animation?) {
+
     }
 }
