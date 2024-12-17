@@ -1,14 +1,20 @@
 package com.yrzapps.ytfy.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnClickListener
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
@@ -37,6 +43,13 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
     lateinit var play: ImageButton
     lateinit var endPosition: TextView
 
+    lateinit var line : View
+    lateinit var miniPlayer : RelativeLayout
+    lateinit var miniPlay : ImageButton
+
+    lateinit var topToBottomAnimation : Animation
+    lateinit var bottomToTopAnimation : Animation
+
     var runnable: Runnable? = null
     val handler = Handler(Looper.getMainLooper())
 
@@ -64,6 +77,14 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
         val forward = view.findViewById<ImageView>(R.id.forward)
         seek = view.findViewById<SeekBar>(R.id.seekBar)
 
+        line = requireActivity().findViewById<View>(R.id.line)
+        miniPlayer = requireActivity().findViewById<RelativeLayout>(R.id.miniPlayer)
+        
+        val thumbnailMini = requireActivity().findViewById<ImageView>(R.id.thumbnail)
+        val forwardMini = requireActivity().findViewById<ImageView>(R.id.forward)
+        miniPlay = requireActivity().findViewById<ImageButton>(R.id.play_pause)
+        val backwardMini = requireActivity().findViewById<ImageView>(R.id.backward)
+
         player = ExoPlayer.Builder(requireContext()).build()
 
         main = Python.getInstance().getModule("main")
@@ -71,6 +92,7 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
         val infoModel = ViewModelProvider(requireActivity())[YTInfoViewModel::class.java]
         infoModel.info.observe(viewLifecycleOwner) { info ->
             Glide.with(thumbnail).load(info["thumbnail"]).into(thumbnail)
+            Glide.with(thumbnailMini).load(info["thumbnail"]).into(thumbnailMini)
 
             title.text = info["title"]
             channelName.text = info["channel"]
@@ -98,6 +120,9 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
         forward.setOnClickListener(this)
         backward.setOnClickListener(this)
         player.addListener(this)
+        miniPlay.setOnClickListener(this)
+        forwardMini.setOnClickListener(this)
+        backwardMini.setOnClickListener(this)
 
         runnable = object : Runnable {
             override fun run() {
@@ -117,6 +142,9 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
                 handler.postDelayed(this, 1000)
             }
         }
+
+        topToBottomAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.top_to_bottom).apply { duration = 100 }
+        bottomToTopAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.bottom_to_top).apply { duration = 100 }
 
         super.onViewCreated(view, savedInstanceState)
     }
@@ -139,7 +167,12 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        play.setImageResource(if (isPlaying) R.drawable.pause else R.drawable.play_arrow)
+
+        (if (isPlaying) R.drawable.pause else R.drawable.play_arrow).apply {
+            play.setImageResource(this)
+            miniPlay.setImageResource(this)
+        }
+
         super.onIsPlayingChanged(isPlaying)
     }
 
@@ -166,5 +199,19 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
 
     override fun onStopTrackingTouch(p0: SeekBar?) {
         player.play()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        miniPlayer.startAnimation(bottomToTopAnimation)
+        line.visibility = VISIBLE
+        miniPlayer.visibility = VISIBLE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        miniPlayer.startAnimation(topToBottomAnimation)
+        line.visibility = GONE
+        miniPlayer.visibility = GONE
     }
 }

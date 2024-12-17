@@ -22,4 +22,8 @@ class YTInfo(query: String) {
         println(info)
     }
 
+    constructor() {
+
+    }
+
 }
