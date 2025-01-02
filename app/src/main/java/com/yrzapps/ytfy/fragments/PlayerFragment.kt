@@ -19,6 +19,7 @@ import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
@@ -70,7 +71,7 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val thumbnail = view.findViewById<ImageView>(R.id.thumbnail)
-        val title = view.findViewById<TextView>(R.id.title)
+        val title = view.findViewById<TextView>(R.id.title).apply { isSelected = true }
         val channelName = view.findViewById<TextView>(R.id.channel)
         currentPosition = view.findViewById<TextView>(R.id.currentPosition)
         endPosition = view.findViewById<TextView>(R.id.endPosition)
@@ -86,6 +87,7 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
         val forwardMini = requireActivity().findViewById<ImageView>(R.id.forward)
         miniPlay = requireActivity().findViewById<ImageButton>(R.id.play_pause)
         val backwardMini = requireActivity().findViewById<ImageView>(R.id.backward)
+        val titleMini = requireActivity().findViewById<TextView>(R.id.title).apply { isSelected = true }
 
         player = ExoPlayer.Builder(requireContext()).build()
 
@@ -97,6 +99,7 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
             Glide.with(thumbnailMini).load(info["thumbnail"]).into(thumbnailMini)
 
             title.text = info["title"]
+            titleMini.text = info["title"]
             channelName.text = info["channel"]
             endPosition.text = info["duration"]
 
@@ -165,12 +168,12 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
         when (playbackState) {
             ExoPlayer.STATE_READY -> {
                 seek.max = player.duration.toInt()
-                handler.postDelayed(runnable!!, 1000)
+                // handler.postDelayed(runnable!!, 1000)
             }
 
             ExoPlayer.STATE_ENDED -> {
                 currentPosition.text = endPosition.text
-                handler.removeCallbacksAndMessages(null)
+               // handler.removeCallbacksAndMessages(null)
             }
 
             Player.STATE_BUFFERING -> {
@@ -191,6 +194,8 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
             play.setImageResource(this)
             miniPlay.setImageResource(this)
         }
+
+        if(isPlaying) handler.post(runnable!!) else handler.removeCallbacksAndMessages(null)
 
         super.onIsPlayingChanged(isPlaying)
     }
@@ -222,12 +227,12 @@ class PlayerFragment : Fragment(), OnClickListener, OnSeekBarChangeListener, Lis
 
     override fun onPause() {
         super.onPause()
-        miniPlayer.startAnimation(bottomToTopAnimation)
+        if(player.currentMediaItem!=null) miniPlayer.startAnimation(bottomToTopAnimation)
     }
 
     override fun onResume() {
         super.onResume()
-        miniPlayer.startAnimation(topToBottomAnimation)
+        if(player.currentMediaItem!=null) miniPlayer.startAnimation(topToBottomAnimation)
     }
 
     override fun onAnimationStart(p0: Animation?) {

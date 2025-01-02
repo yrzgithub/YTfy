@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/black"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/miniPlayer"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -28,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:paddingTop="5dp"
+        android:visibility="gone"
         android:background="@android:color/white"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/pager"
@@ -38,8 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:paddingStart="5dp"
-            android:src="@drawable/thumbnail_example" />
+            android:paddingStart="5dp" />
 
         <TextView
             android:id="@+id/title"
@@ -47,11 +48,12 @@
             android:layout_height="30dp"
             android:layout_toEndOf="@+id/thumbnail"
             android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
             android:enabled="true"
             android:gravity="top"
-            android:maxLines="1"
             android:paddingStart="10dp"
-            android:text="Kadhal Vaithu - 4K Video Song | காதல் வைத்து | Deepavali | Jayam Ravi | Bhavana | Yuvan Shankar Raja"
+            android:text=""
             android:textSize="18sp" />
 
         <RelativeLayout

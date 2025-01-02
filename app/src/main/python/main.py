@@ -22,7 +22,7 @@ def getSuggestions(query:str)->[str]:
         return []
 
 
-def search(query,max_results=None,max_retries=10):
+def search(query,max_results=5,max_retries=10):
         encoded_search = urllib.parse.quote_plus(query)
         url = f"{BASE_URL}/results?search_query={encoded_search}"
         response = requests.get(url).text
